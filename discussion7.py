@@ -85,6 +85,7 @@ def calculate_avg_price_by_neighbourhood_group_and_room(listings):
         if counts[key] > 0:
             averages[key] = totals[key] / counts[key]
 
+    # Return dictionary mapping (neighbourhood_group, room_type) -> average price
     return averages
 
 
