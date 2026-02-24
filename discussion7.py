@@ -57,7 +57,36 @@ def calculate_avg_price_by_neighbourhood_group_and_room(listings):
         dict mapping (neighbourhood_group, room_type) -> average_price (float)
         e.g. { ('Downtown', 'Entire home/apt'): 123.45, ... }
     """
-    pass
+    totals = {}   # (neighbourhood_group, room_type) -> total price
+    counts = {}   # (neighbourhood_group, room_type) -> count
+
+    for listing in listings:
+        ng = listing.get("neighbourhood_group", "")
+        rt = listing.get("room_type", "")
+        price_str = listing.get("price", "")
+
+        # Skip rows missing required fields
+        if ng == "" or rt == "" or price_str == "":
+            continue
+
+        # Convert price to float; skip if not convertible
+        try:
+            price = float(price_str)
+        except (ValueError, TypeError):
+            continue
+
+        key = (ng, rt)
+        totals[key] = totals.get(key, 0.0) + price
+        counts[key] = counts.get(key, 0) + 1
+
+    # Compute averages
+    averages = {}
+    for key in totals:
+        if counts[key] > 0:
+            averages[key] = totals[key] / counts[key]
+
+    return averages
+
 
 
 
